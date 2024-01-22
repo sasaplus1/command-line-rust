@@ -20,16 +20,19 @@ jobs:
         include:
           - name: format
             command: >
-              find . -name Cargo.toml -exec
-              cargo fmt --check --manifest-path {} \;
+              set -e &&
+              find . -name Cargo.toml -print |
+              xargs -n 1 cargo fmt --check --manifest-path
           - name: lint
             command: >
+              set -e &&
               find . -name Cargo.toml -exec
               sh -c 'cd "$(dirname {})" && cargo clippy -- -D warnings' \;
           - name: test
             command: >
-              find . -name Cargo.toml -exec
-              cargo test --manifest-path {} \;
+              set -e &&
+              find . -name Cargo.toml -print |
+              xargs -n 1 cargo test --manifest-path
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
