@@ -18,21 +18,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # If it fails in the middle, the remaining commands will not be executed
           - name: format
             command: >
-              set -e &&
-              find . -name Cargo.toml -print |
-              xargs -n 1 cargo fmt --check --manifest-path
+              set -eo pipefail &&
+              find . -name Cargo.toml -print0 |
+              xargs -0 -n 1 cargo fmt --check --manifest-path
           - name: lint
             command: >
-              set -e &&
+              set -eo pipefail &&
               find . -name Cargo.toml -exec
               sh -c 'cd "$(dirname {})" && cargo clippy -- -D warnings' \;
           - name: test
             command: >
-              set -e &&
-              find . -name Cargo.toml -print |
-              xargs -n 1 cargo test --manifest-path
+              set -eo pipefail &&
+              find . -name Cargo.toml -print0 |
+              xargs -0 -n 1 cargo test --manifest-path
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
