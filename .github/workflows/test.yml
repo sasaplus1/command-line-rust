@@ -23,7 +23,9 @@ jobs:
           - name: lint
             command: cargo clippy -- -D warnings
           - name: test
-            command: cargo test
+            command: >
+              find . -name Cargo.toml -exec
+              cargo test --manifest-path {} \;
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -32,4 +34,4 @@ jobs:
         with:
           components: clippy,rustfmt
       - uses: Swatinem/rust-cache@v2
-      - run: find . -name Cargo.toml -print -exec ${{ matrix.command }} --manifest-path {} \;
+      - run: ${{ matrix.command }}
