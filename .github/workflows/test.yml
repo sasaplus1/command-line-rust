@@ -32,4 +32,4 @@ jobs:
         with:
           components: clippy,rustfmt
       - uses: Swatinem/rust-cache@v2
-      - run: ${{ matrix.command }}
+      - run: find . -name Cargo.toml -print -exec ${{ matrix.command }} --manifest-path {} \;
