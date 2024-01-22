@@ -19,9 +19,13 @@ jobs:
       matrix:
         include:
           - name: format
-            command: cargo fmt --check
+            command: >
+              find . -name Cargo.toml -exec
+              cargo fmt --check --manifest-path {} \;
           - name: lint
-            command: cargo clippy -- -D warnings
+            command: >
+              find . -name Cargo.toml -exec
+              sh -c 'cd "$(dirname {})" && cargo clippy -- -D warnings' \;
           - name: test
             command: >
               find . -name Cargo.toml -exec
